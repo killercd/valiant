@@ -1,0 +1,12 @@
+total 44
+drwxrwxr-x 5 osboxes osboxes 4096 Nov  7 09:05 .
+drwxr-xr-x 4 osboxes osboxes 4096 Nov  7 08:21 ..
+drwxrwxr-x 5 osboxes osboxes 4096 Nov  7 08:44 env
+drwxrwxr-x 8 osboxes osboxes 4096 Nov  7 08:21 .git
+-rw-rw-r-- 1 osboxes osboxes 3078 Nov  7 08:21 .gitignore
+-rw-rw-r-- 1 osboxes osboxes  615 Nov  7 11:53 lsout
+drwxrwxr-x 3 osboxes osboxes 4096 Nov  7 08:59 parser
+-rw-rw-r-- 1 osboxes osboxes  232 Nov  7 08:37 README.md
+-rw-rw-r-- 1 osboxes osboxes   15 Nov  7 09:38 requirements.txt
+-rw-rw-r-- 1 osboxes osboxes  965 Nov  7 11:14 script1.json
+-rw-rw-r-- 1 osboxes osboxes  384 Nov  7 11:23 valiant.py

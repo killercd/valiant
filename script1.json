@@ -1,0 +1,42 @@
+{
+
+    "configuration":{
+        "dbHost": "10.3.1.25",
+        "dbUser": "gpeevo",
+        "dbPwd": "gpeevo",
+        "dbName": "gpeevo"
+    },
+    "tasks": [
+        {
+            "id": "task1",
+            "type": "shell",
+            "content":{
+                "command": "ls -all",
+                "outputFile": "lsout"
+            }
+        },
+        {
+            "id": "task2",
+            "type": "shell",
+            "content":{
+                "command": "cat lsout"
+            }
+        },
+        {
+            "id": "Last modified BOOK",
+            "type": "database",
+            "connection":{
+                "host": "{dbHost}",
+                "user": "{dbUser}",
+                "password": "{dbPwd}",
+                "dbname": "{dbName}"
+            },
+            "content":{
+                "type": "SELECT",
+                "command": "SELECT * FROM LIBRI_ANAGRAFICA ORDER BY DATA_MODIFICA DESC LIMIT 10"
+            }
+
+        }
+    ]
+
+}
