@@ -1,5 +1,6 @@
 import subprocess
-
+import psycopg2
+import csv
 
 class ShellException(Exception):
     "Shell command failed"
@@ -21,7 +22,7 @@ class DatabaseParser():
         self.user = user
         self.password = password
     
-    def connect():
+    def connect(self):
     
         conn = psycopg2.connect(
             host=self.host,
@@ -33,16 +34,7 @@ class DatabaseParser():
         cur = conn.cursor()
         return conn, cur
 
-def replace_conf_cmd(configuration, task, conf_type, key):
-    
-    param = task[conf_type][key]
-    param = db_host.replace("{","") 
-    param = db_host.replace("}","") 
-    param = task["configuration"][param]
-
-    return param
-
-def parse_shell(task, configuration):
+def parse_shell(task):
     
     command = task["content"]["command"]
     out_content = subprocess.check_output(command, shell=True)
@@ -54,12 +46,12 @@ def parse_shell(task, configuration):
         return b''
     return out_content
 
-def parse_database(task, configuration):
+def parse_database(task):
 
-    db_host = replace_conf_cmd(configuration, task, "connection", "dbHost")
-    db_user = replace_conf_cmd(configuration, task, "connection", "dbUser")
-    db_pwd = replace_conf_cmd(configuration, task, "connection", "dbPwd")
-    db_name = replace_conf_cmd(configuration, task, "connection", "dbName")
+    db_host = task["connection"]["host"]
+    db_user = task["connection"]["user"]
+    db_pwd = task["connection"]["password"]
+    db_name = task["connection"]["dbname"]
 
 
     db_parser = DatabaseParser(db_host,
@@ -73,17 +65,27 @@ def parse_database(task, configuration):
         query = task["content"]["command"]
         cur.execute(query)
         rows = cur.fetchall()
-        for row in rows:
-            print(row)
+        if not "output" in task["content"]:
+            for row in rows:
+                print(row)
+        else:
+            outputs = task["content"]["output"]["formats"]
+            for out_format in outputs:
+                if out_format["type"]=="csv":
+                    with open(out_format["file"], 'w', encoding='UTF8') as f:
+                        writer = csv.writer(f, delimiter =out_format["delimiter"])
+                        for row in rows:
+                            writer.writerow(row)
 
 
-def parse_task(task, configuration):
+
+def parse_task(task):
     if task["type"]=="shell":
-        result = parse_shell(task, configuration)        
+        result = parse_shell(task)
         return result.decode('utf-8')
     
     elif task["type"]=="database":
-        result = parse_database(task, configuration)        
+        result = parse_database(task)
     else:
         print("Type not found")
     return ""
